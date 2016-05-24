@@ -82,7 +82,28 @@ myPlugin.prototype.apply = function (compiler) {
 
 
 		compilation.plugin('seal',function(){
-			console.log('compilation-->>01-->>seal');
+			console.log('       compilation-->>01-->>seal');
+		});
+
+		compilation.plugin('optimize',function(){
+			console.log('       compilation-->>02-->>optimize');
+		});
+
+		compilation.plugin('after-optimize-modules',function(){
+			console.log('       compilation-->>03-->>after-optimize-modules');
+		});
+
+		compilation.plugin('after-optimize-chunks',function(){
+			console.log('       compilation-->>04-->>after-optimize-chunks');
+		});
+
+		compilation.plugin('optimize-tree',function(chunks,modules,callback){
+			console.log('       compilation-->>05-->>optimize-tree-->>异步(chunks,modules,callback)');
+			callback();
+		});
+
+		compilation.plugin('after-optimize-tree',function(){
+			console.log('       compilation-->>06-->>after-optimize-tree');
 		});
 	});
 
