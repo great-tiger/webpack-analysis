@@ -7,9 +7,9 @@ myPlugin.prototype.apply = function (compiler) {
 	console.log('myPlugin.prototype.apply called');
 
 	/*调用插件的先后顺序*/
-	compiler.plugin('entry-option', function (context,entry) {
+	compiler.plugin('entry-option', function (context, entry) {
 		/*这里处理entry EntryOptionPlugin中用到了*/
-		console.log('1-->>entry-option',context,entry);
+		console.log('1-->>entry-option', context, entry);
 	});
 	compiler.plugin('after-plugins', function () {
 		console.log('2-->>after-plugins');
@@ -45,18 +45,18 @@ myPlugin.prototype.apply = function (compiler) {
 		console.log('8-->>compile');
 	});
 
-    /*compile 回调处理完成之后，开始创建compilation实例，
-      配置参数后，先后触发this-compilation，compilation
-      注意这两个都是同时同步执行的
+	/*compile 回调处理完成之后，开始创建compilation实例，
+	 配置参数后，先后触发this-compilation，compilation
+	 注意这两个都是同时同步执行的
 
 	 this-compilation compilation实例化后，第一次回调。
 	 在这里就可以访问到compilation对象了
-    */
-	compiler.plugin('this-compilation', function (compilation,params) {
+	 */
+	compiler.plugin('this-compilation', function (compilation, params) {
 		/*
 		 var params = {
-			 normalModuleFactory: this.createNormalModuleFactory(),
-			 contextModuleFactory: this.createContextModuleFactory()
+		 normalModuleFactory: this.createNormalModuleFactory(),
+		 contextModuleFactory: this.createContextModuleFactory()
 		 };
 		 */
 		console.log('9-->>this-compilation');
@@ -64,14 +64,14 @@ myPlugin.prototype.apply = function (compiler) {
 	});
 
 	/*
-	  实质上执行完make插件，就开始执行compilation.seal方法。
-	  执行权就交给compilation了。
-	  注册compilation插件的时机：
-	   this-compilation
-	   compilation
-	   make
-	*/
-	compiler.plugin('compilation', function (compilation,params) {
+	 实质上执行完make插件，就开始执行compilation.seal方法。
+	 执行权就交给compilation了。
+	 注册compilation插件的时机：
+	 this-compilation
+	 compilation
+	 make
+	 */
+	compiler.plugin('compilation', function (compilation, params) {
 		/*
 		 var params = {
 		 normalModuleFactory: this.createNormalModuleFactory(),
@@ -80,35 +80,146 @@ myPlugin.prototype.apply = function (compiler) {
 		 */
 		console.log('10-->>compilation');
 
+		var i = 0;
 
-		compilation.plugin('seal',function(){
-			console.log('       compilation-->>01-->>seal');
+
+		/**
+		 * In the compilation phase, modules are loaded, sealed, optimized, chunked, hashed and restored, etc.
+		 * This would be the main lifecycle of any operations of the compilation
+		 * 上面说：compilation阶段的生命周期为:
+		 * modules are loaded, sealed, optimized, chunked, hashed and restored, etc.
+		 */
+
+		compilation.plugin('normal-module-loader', function (loaderContext, module) {
+			//this is where all the modules are loaded
+			//one by one, no dependencies are created yet
+			console.log('       compilation-->>' + (i++) + '-->>normal-module-loader');
 		});
 
-		compilation.plugin('optimize',function(){
-			console.log('       compilation-->>02-->>optimize');
+		compilation.plugin('seal', function () {
+			//The sealing of the compilation has started. seal阶段开始
+			//you are not accepting any more modules
+			//no arguments
+			console.log('       compilation-->>' + (i++) + '-->>seal');
 		});
 
-		compilation.plugin('after-optimize-modules',function(){
-			console.log('       compilation-->>03-->>after-optimize-modules');
+
+		compilation.plugin('optimize', function () {
+			//webpack is begining the optimization phase
+			// no arguments
+			//开始优化阶段
+			console.log('       compilation-->>' + (i++) + '-->>optimize');
 		});
 
-		compilation.plugin('after-optimize-chunks',function(){
-			console.log('       compilation-->>04-->>after-optimize-chunks');
+
+
+
+
+
+		compilation.plugin('optimize-modules', function(modules) {
+			//handle to the modules array during tree optimization
+			console.log('       compilation-->>' + (i++) + '-->>optimize-modules-->>同步(modules)');
 		});
 
-		compilation.plugin('optimize-tree',function(chunks,modules,callback){
-			console.log('       compilation-->>05-->>optimize-tree-->>异步(chunks,modules,callback)');
+		compilation.plugin('after-optimize-modules', function (modules) {
+			//Optimizing the modules has finished.
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-modules-->>同步(modules)');
+		});
+
+		//optimize chunks may be run several times in a compilation
+		compilation.plugin('optimize-chunks', function(chunks) {
+			//unless you specified multiple entries in your config
+			//there's only one chunk at this point
+			//这句非常有用，如果在配置文件中，entry只有一个的话，chunk 就只有一个
+			console.log('       compilation-->>' + (i++) + '-->>optimize-chunks-->>同步(chunks)');
+
+			chunks.forEach(function (chunk) {
+				//chunks have circular references to their modules
+				chunk.modules.forEach(function (module){
+					//module.loaders, module.rawRequest, module.dependencies, etc.
+				});
+			});
+		});
+
+		compilation.plugin('after-optimize-chunks', function (chunks) {
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-chunks-->>同步(chunks)');
+		});
+
+
+		compilation.plugin('optimize-tree', function (chunks, modules, callback) {
+			console.log('       compilation-->>' + (i++) + '-->>optimize-tree-->>异步(chunks,modules,callback)');
 			callback();
 		});
 
-		compilation.plugin('after-optimize-tree',function(){
-			console.log('       compilation-->>06-->>after-optimize-tree');
+		compilation.plugin('after-optimize-tree', function () {
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-tree');
 		});
+
+		compilation.plugin('revive-modules', function (modules, records) {
+			//Restore module info from records.
+			console.log('       compilation-->>' + (i++) + '-->>revive-modules-->>同步(modules, records)');
+		});
+
+		compilation.plugin('optimize-module-order', function (modules) {
+			//Sort the modules in order of importance.
+			//The first is the most important module.
+			// It will get the smallest id.
+			console.log('       compilation-->>' + (i++) + '-->>optimize-module-order-->>同步(modules)');
+		});
+
+		compilation.plugin('optimize-module-ids', function (modules) {
+			//Optimize the module ids.
+			console.log('       compilation-->>' + (i++) + '-->>optimize-module-ids-->>同步(modules)');
+		});
+
+		compilation.plugin('after-optimize-module-ids', function (modules) {
+			//Optimizing the module ids has finished.
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-module-ids-->>同步(modules)');
+		});
+
+		compilation.plugin('record-modules', function (modules,records) {
+			//Store module info to the records.
+			console.log('       compilation-->>' + (i++) + '-->>record-modules-->>同步(modules,records)');
+		});
+
+
+
+		compilation.plugin('revive-chunks', function (chunks,records) {
+			//Restore chunk info from records.
+			console.log('       compilation-->>' + (i++) + '-->>revive-chunks-->>同步(chunks,records)');
+		});
+
+		compilation.plugin('optimize-chunk-order', function (chunks) {
+			//Sort the chunks in order of importance.
+			//The first is the most important chunk.
+			//It will get the smallest id.
+			console.log('       compilation-->>' + (i++) + '-->>optimize-chunk-order-->>同步(chunks)');
+		});
+
+		compilation.plugin('optimize-chunk-ids', function (chunks) {
+			//Optimize the chunk ids.
+			console.log('       compilation-->>' + (i++) + '-->>optimize-chunk-ids-->>同步(chunks)');
+		});
+
+		compilation.plugin('after-optimize-chunk-ids', function (chunks) {
+			//Optimizing the chunk ids has finished.
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-chunk-ids-->>同步(chunks)');
+		});
+		compilation.plugin('record-chunks', function (chunks,records) {
+			//Store chunk info to the records.
+			console.log('       compilation-->>' + (i++) + '-->>record-chunks-->>同步(chunks,records)');
+		});
+
 	});
 
-	/*注意：make 回调，是并行完成的*/
-	compiler.plugin('make',function(compilation,callback){
+	/*
+	 注意：make 回调，是并行完成的
+	 Plugins can use this point to add entries to the compilation
+	 or prefetch modules. They can do this by calling
+	 addEntry(context, entry, name, callback)
+	 or prefetch(context, dependency, callback) on the Compilation
+	 */
+	compiler.plugin('make', function (compilation, callback) {
 		console.log('11-->>make');
 
 		callback();
@@ -118,21 +229,21 @@ myPlugin.prototype.apply = function (compiler) {
 	/****************************************************************/
 	/*在这里执行逻辑转入到了compilation中，入口compilation.seal*/
 	/*
- 	   注册compilation插件，我们可以写到this-compilation,compilation,make
- 	*/
+	 注册compilation插件，我们可以写到this-compilation,compilation,make
+	 */
 
 	/********************开始compilation执行逻辑***********************/
-
-
-
 
 
 	/********************结束compilation执行逻辑*******＊***************/
 
 	/*
-		在这两者之间，回调compilation.seal方法
+	 在这两者之间，回调compilation.seal方法
+	 The compile process is finished and the modules are sealed
+	 The next step is to emit the generated stuff.
+	 Here modules can use the results in some cool ways.
 	 */
-	compiler.plugin('after-compile',function(compilation,callback){
+	compiler.plugin('after-compile', function (compilation, callback) {
 		console.log('12-->>after-compile');
 		callback();
 	});
@@ -140,11 +251,11 @@ myPlugin.prototype.apply = function (compiler) {
 	/*
 
 	 if(this.applyPluginsBailResult("should-emit", compilation) === false) {
-		 var stats = compilation.getStats();
-		 stats.startTime = startTime;
-		 stats.endTime = new Date().getTime();
-		 this.applyPlugins("done", stats);
-		 return callback(null, stats);
+	 var stats = compilation.getStats();
+	 stats.startTime = startTime;
+	 stats.endTime = new Date().getTime();
+	 this.applyPlugins("done", stats);
+	 return callback(null, stats);
 	 }
 
 	 通过上面的代码，可以知道，如果第一个should-emit，返回false的话，则直接调用done，结束！
@@ -153,19 +264,26 @@ myPlugin.prototype.apply = function (compiler) {
 		console.log('13-->>should-emit');
 	});
 
-	/*emit插件都执行完成后，就开始把compilation.assets写入文件系统*/
-	compiler.plugin('emit',function(compilation,callback){
+	/*
+	 emit插件都执行完成后，就开始把compilation.assets写入文件系统
+	 The Compiler begins with emitting the generated assets.
+	 Here plugins have the last chance to add assets to the c.assets array.
+	 */
+	compiler.plugin('emit', function (compilation, callback) {
 		console.log('14-->>emit');
 		callback();
 	});
 
-	/*compilation.assets 写入文件完成*/
-	compiler.plugin('after-emit',function(compilation,callback){
+	/*
+	 compilation.assets 写入文件完成
+	 The Compiler has emitted all assets.
+	 */
+	compiler.plugin('after-emit', function (compilation, callback) {
 		console.log('15-->>after-emit');
 		callback();
 	});
 
-	compiler.plugin('done',function(stat){
+	compiler.plugin('done', function (stat) {
 		console.log('16-->>done');
 	});
 };
@@ -201,23 +319,24 @@ FileListPlugin.prototype.apply = function (compiler) {
 };
 
 
-function MyPlugin() {}
+function MyPlugin() {
+}
 
-MyPlugin.prototype.apply = function(compiler) {
-	compiler.plugin('emit', function(compilation, callback) {
+MyPlugin.prototype.apply = function (compiler) {
+	compiler.plugin('emit', function (compilation, callback) {
 
 		// Explore each chunk (build output):
-		compilation.chunks.forEach(function(chunk) {
+		compilation.chunks.forEach(function (chunk) {
 			// Explore each module within the chunk (built inputs):
-			chunk.modules.forEach(function(module) {
+			chunk.modules.forEach(function (module) {
 				// Explore each source file path that was included into the module:
-				module.fileDependencies.forEach(function(filepath) {
+				module.fileDependencies.forEach(function (filepath) {
 					// we've learned a lot about the source structure now...
 				});
 			});
 
 			// Explore each asset filename generated by the chunk:
-			chunk.files.forEach(function(filename) {
+			chunk.files.forEach(function (filename) {
 				// Get the asset source for each file generated by the chunk:
 				var source = compilation.assets[filename].source();
 			});
@@ -244,8 +363,19 @@ var compile = webpack({
  var showTimings = d(options.timings, true);
  var showAssets = d(options.assets, true);
  var showChunks = d(options.chunks, true);
-*/
-compile.run(function (err,stats) {
-	process.stdout.write('\n\n\n'+stats.toString({colors:true,hash:true,version:true,timings:true,assets:true,chunks:true}) + "\n");
+ */
+/*官方对这个方法的解释：
+ The run method of the Compiler is used to start a compilation.
+ This is not called in watch mode.
+ */
+compile.run(function (err, stats) {
+	process.stdout.write('\n\n\n' + stats.toString({
+			colors: true,
+			hash: true,
+			version: true,
+			timings: true,
+			assets: true,
+			chunks: true
+		}) + "\n");
 });
 
