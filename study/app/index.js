@@ -1,5 +1,6 @@
-module.exports = function (optimist) {
-	var i = 0;
-	var j = i;
-	return i+j;
-};
+var a=require('./a');
+a();
+var b=require('./b');
+b();
+var c=require('./c');
+c();

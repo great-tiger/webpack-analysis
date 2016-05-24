@@ -90,10 +90,24 @@ myPlugin.prototype.apply = function (compiler) {
 		 * modules are loaded, sealed, optimized, chunked, hashed and restored, etc.
 		 */
 
+		compilation.plugin('build-module', function(module){
+			//Before a module build has started.
+			console.log('       compilation-->>' + (i++) + '-->>build-module-->>module.request='+module.request);
+		});
+
+		compilation.plugin('succeed-module', function(module){
+			//A module has been built successfully.
+			console.log('       compilation-->>' + (i++) + '-->>succeed-module-->>module.request='+module.request);
+		});
+
+		compilation.plugin('failed-module', function(module){
+			console.log('       compilation-->>' + (i++) + '-->>fail-module-->>module.request='+module.request);
+		});
+
 		compilation.plugin('normal-module-loader', function (loaderContext, module) {
 			//this is where all the modules are loaded
 			//one by one, no dependencies are created yet
-			console.log('       compilation-->>' + (i++) + '-->>normal-module-loader');
+			console.log('       compilation-->>' + (i++) + '-->>normal-module-loader-->module.request='+module.request);
 		});
 
 		compilation.plugin('seal', function () {
@@ -210,6 +224,63 @@ myPlugin.prototype.apply = function (compiler) {
 			console.log('       compilation-->>' + (i++) + '-->>record-chunks-->>同步(chunks,records)');
 		});
 
+		compilation.plugin('before-hash', function () {
+			//Before the compilation is hashed.
+			console.log('       compilation-->>' + (i++) + '-->>before-hash');
+		});
+
+		compilation.plugin('after-hash', function () {
+			//After the compilation is hashed.
+			console.log('       compilation-->>' + (i++) + '-->>after-hash');
+		});
+
+		compilation.plugin('before-chunk-assets', function () {
+			//Before creating the chunk assets.  创建assets之前
+			console.log('       compilation-->>' + (i++) + '-->>before-chunk-assets');
+		});
+
+		compilation.plugin('chunk-asset', function (chunk, filename) {
+			//An asset from a chunk was added to the compilation.
+			console.log('       compilation-->>' + (i++) + '-->>chunk-asset');
+		});
+
+		compilation.plugin('additional-chunk-assets', function (chunks) {
+			//Create additional assets for the chunks.
+			console.log('       compilation-->>' + (i++) + '-->>additional-chunk-assets');
+		});
+		compilation.plugin('record', function (compilation, records) {
+			//Store info about the compilation to the record
+			console.log('       compilation-->>' + (i++) + '-->>record');
+		});
+		compilation.plugin('optimize-chunk-assets', function (chunks,callback) {
+			//Optimize the assets for the chunks.
+			console.log('       compilation-->>' + (i++) + '-->>optimize-chunk-assets');
+			callback();
+		});
+
+		compilation.plugin('after-optimize-chunk-assets', function (chunks) {
+			//The chunk assets have been optimized.
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-chunk-assets');
+		});
+
+		compilation.plugin('optimize-assets', function (assets,callback) {
+			//The assets are stored in this.assets.
+			console.log('       compilation-->>' + (i++) + '-->>optimize-assets');
+			callback();
+		});
+
+		compilation.plugin('after-optimize-assets', function (assets) {
+			//The assets has been optimized.
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-assets');
+		});
+
+		/*这个没有被调用到*/
+		compilation.plugin('module-asset', function (module, filename) {
+			//An asset from a module was added to the compilation.
+			console.log('       compilation-->>' + (i++) + '-->>module-asset');
+		});
+
+
 	});
 
 	/*
@@ -321,7 +392,7 @@ FileListPlugin.prototype.apply = function (compiler) {
 
 function MyPlugin() {
 }
-
+var ConcatSource=require('../node_modules/webpack-sources/lib/ConcatSource.js')
 MyPlugin.prototype.apply = function (compiler) {
 	compiler.plugin('emit', function (compilation, callback) {
 
@@ -342,7 +413,42 @@ MyPlugin.prototype.apply = function (compiler) {
 			});
 		});
 
+
+
 		callback();
+	});
+
+	compiler.plugin('compilation',function(compilation){
+		compilation.plugin("optimize-chunk-assets", function(chunks, callback) {
+			chunks.forEach(function(chunk) {
+				chunk.files.forEach(function(file) {
+					compilation.assets[file] = new ConcatSource("\/**Sweet Banner**\/", "\n", compilation.assets[file]);
+				});
+			});
+			callback();
+		});
+	})
+};
+
+
+
+var PrintChunksPlugin = function() {};
+PrintChunksPlugin.prototype.apply = function(compiler) {
+	compiler.plugin('compilation', function(compilation, params) {
+		compilation.plugin('after-optimize-chunk-assets', function(chunks) {
+			console.log(chunks.map(function(c) {
+				return {
+					id: c.id,
+					name: c.name,
+					includes: c.modules.map(function(m) {
+						//module.request 代表什么含义，从输出上看
+						//按照node哪种写法，一个文件就是一个module。
+						//猜想request是 module 对应的文件的绝对路径
+						return m.request;
+					})
+				};
+			}));
+		});
 	});
 };
 
@@ -354,7 +460,8 @@ var compile = webpack({
 		filename: "bundle.js"
 	},
 	plugins: [
-		new myPlugin()
+		new myPlugin(),
+		//new PrintChunksPlugin()
 	]
 });
 /*
