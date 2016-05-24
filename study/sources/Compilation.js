@@ -485,6 +485,19 @@ Compilation.prototype.rebuildModule = function(module, thisCallback) {
 
 Compilation.prototype.seal = function seal(callback) {
 	this.applyPlugins("seal");
+	/*
+	 this.preparedChunks 中的值来自哪里？
+	 信息来源于 WebpackOptionsApply.js
+	 compiler.apply(new EntryOptionPlugin());
+	 compiler.applyPluginsBailResult("entry-option", options.context, options.entry);
+	 如果我们设置的entry是一个字符串的话，源码把我的注意力转向
+	 SingleEntryPlugin.js
+	 进而调用
+	 var dep = new SingleEntryDependency(this.entry);
+	 dep.loc = this.name;
+	 compilation.addEntry(this.context, dep, this.name, callback);
+     绕了一大圈，总算控制权又交到compilation中啦。
+	 */
 	this.preparedChunks.sort(function(a, b) {
 		if(a.name < b.name) return -1;
 		if(a.name > b.name) return 1;
