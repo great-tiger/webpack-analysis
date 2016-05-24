@@ -190,6 +190,7 @@ Compiler.prototype.run = function(callback) {
 			this.readRecords(function(err) {
 				if(err) return callback(err);
 
+				/*开始编译*/
 				this.compile(function onCompiled(err, compilation) {
 					if(err) return callback(err);
 

@@ -87,14 +87,21 @@ Tapable.prototype.applyPluginsBailResult1 = function applyPluginsBailResult1(nam
 		}
 	}
 };
-
+/*
+ 使用方式：
+ this.applyPluginsAsync("before-run", this, function(err) {
+ 	//key 为before-run的插件都执行完成，或者有一个报错时，执行该回调函数
+ 	if(err) return callback(err);
+ }.bind(this));
+ */
 Tapable.prototype.applyPluginsAsyncSeries = Tapable.prototype.applyPluginsAsync = function applyPluginsAsync(name) {
 	var args = Array.prototype.slice.call(arguments, 1);
-	var callback = args.pop();
+	var callback = args.pop();/*最后一个参数为构造函数*/
 	if(!this._plugins[name] || this._plugins[name].length === 0) return callback();
 	var plugins = this._plugins[name];
 	var i = 0;
 	var _this = this;
+	/*这里不考虑copyProperties，不影响理解*/
 	args.push(copyProperties(callback, function next(err) {
 		if(err) return callback(err);
 		i++;
@@ -103,6 +110,8 @@ Tapable.prototype.applyPluginsAsyncSeries = Tapable.prototype.applyPluginsAsync 
 		}
 		plugins[i].apply(_this, args);
 	}));
+	/*注意：这里不是调用插件的apply方法，而是调用函数的apply方法*/
+	/*注意：args为数组[this,next]*/
 	plugins[0].apply(this, args);
 };
 
