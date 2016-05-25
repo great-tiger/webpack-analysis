@@ -1,4 +1,4 @@
-var a=require('./a');
-a();
+var a=require('./b');
+b();
 var jquery=require('./jquery');
 jquery();

@@ -1,0 +1,478 @@
+{
+  "errors": [],
+  "warnings": [],
+  "version": "1.12.15",
+  "hash": "aefe34ad51bef47b7eae",
+  "time": 69,
+  "publicPath": "",
+  "assetsByChunkName": {
+    "a": "a.bundle.js",
+    "b": "b.bundle.js",
+    "init": "init.bundle.js"
+  },
+  "assets": [
+    {
+      "name": "a.bundle.js",
+      "size": 287,
+      "chunks": [
+        0
+      ],
+      "chunkNames": [
+        "a"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "b.bundle.js",
+      "size": 305,
+      "chunks": [
+        1
+      ],
+      "chunkNames": [
+        "b"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "init.bundle.js",
+      "size": 3682,
+      "chunks": [
+        2
+      ],
+      "chunkNames": [
+        "init"
+      ],
+      "emitted": true
+    }
+  ],
+  "chunks": [
+    {
+      "id": 0,
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "extraAsync": false,
+      "size": 119,
+      "names": [
+        "a"
+      ],
+      "files": [
+        "a.bundle.js"
+      ],
+      "hash": "bf2e22e8f5e81d31d778",
+      "parents": [
+        2
+      ],
+      "modules": [
+        {
+          "id": 0,
+          "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "name": "./app/index.js",
+          "index": 0,
+          "index2": 2,
+          "size": 68,
+          "cacheable": true,
+          "built": true,
+          "optional": false,
+          "prefetched": false,
+          "chunks": [
+            0
+          ],
+          "assets": [],
+          "issuer": null,
+          "profile": {
+            "factory": 12,
+            "building": 14
+          },
+          "failed": false,
+          "errors": 0,
+          "warnings": 0,
+          "reasons": [],
+          "source": "var a=require('./a');\na();\nvar jquery=require('./jquery');\njquery();"
+        },
+        {
+          "id": 1,
+          "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/a.js",
+          "name": "./app/a.js",
+          "index": 1,
+          "index2": 0,
+          "size": 51,
+          "cacheable": true,
+          "built": true,
+          "optional": false,
+          "prefetched": false,
+          "chunks": [
+            0
+          ],
+          "assets": [],
+          "issuer": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "profile": {
+            "factory": 5,
+            "building": 5
+          },
+          "failed": false,
+          "errors": 0,
+          "warnings": 0,
+          "reasons": [
+            {
+              "moduleId": 0,
+              "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+              "module": "./app/index.js",
+              "moduleName": "./app/index.js",
+              "type": "cjs require",
+              "userRequest": "./a",
+              "loc": "1:6-20"
+            }
+          ],
+          "source": "module.exports = function(){\n  console.log('a');\n};"
+        }
+      ],
+      "filteredModules": 0,
+      "origins": [
+        {
+          "moduleId": 0,
+          "module": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "moduleName": "./app/index.js",
+          "loc": "",
+          "name": "a",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "extraAsync": false,
+      "size": 119,
+      "names": [
+        "b"
+      ],
+      "files": [
+        "b.bundle.js"
+      ],
+      "hash": "60614ef246fa967eda58",
+      "parents": [
+        2
+      ],
+      "modules": [
+        {
+          "id": 0,
+          "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+          "name": "./app/index1.js",
+          "index": 3,
+          "index2": 4,
+          "size": 68,
+          "cacheable": true,
+          "built": true,
+          "optional": false,
+          "prefetched": false,
+          "chunks": [
+            1
+          ],
+          "assets": [],
+          "issuer": null,
+          "profile": {
+            "factory": 13,
+            "building": 12,
+            "dependencies": 5
+          },
+          "failed": false,
+          "errors": 0,
+          "warnings": 0,
+          "reasons": [],
+          "source": "var a=require('./b');\nb();\nvar jquery=require('./jquery');\njquery();"
+        },
+        {
+          "id": 3,
+          "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/b.js",
+          "name": "./app/b.js",
+          "index": 4,
+          "index2": 3,
+          "size": 51,
+          "cacheable": true,
+          "built": true,
+          "optional": false,
+          "prefetched": false,
+          "chunks": [
+            1
+          ],
+          "assets": [],
+          "issuer": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+          "profile": {
+            "factory": 5,
+            "building": 4
+          },
+          "failed": false,
+          "errors": 0,
+          "warnings": 0,
+          "reasons": [
+            {
+              "moduleId": 0,
+              "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+              "module": "./app/index1.js",
+              "moduleName": "./app/index1.js",
+              "type": "cjs require",
+              "userRequest": "./b",
+              "loc": "1:6-20"
+            }
+          ],
+          "source": "module.exports = function(){\n  console.log('b');\n};"
+        }
+      ],
+      "filteredModules": 0,
+      "origins": [
+        {
+          "moduleId": 0,
+          "module": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+          "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+          "moduleName": "./app/index1.js",
+          "loc": "",
+          "name": "b",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "rendered": true,
+      "initial": true,
+      "entry": true,
+      "extraAsync": false,
+      "size": 55,
+      "names": [
+        "init"
+      ],
+      "files": [
+        "init.bundle.js"
+      ],
+      "hash": "f337cca74673c9288fc6",
+      "parents": [],
+      "modules": [
+        {
+          "id": 2,
+          "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/jquery.js",
+          "name": "./app/jquery.js",
+          "index": 2,
+          "index2": 1,
+          "size": 55,
+          "cacheable": true,
+          "built": true,
+          "optional": false,
+          "prefetched": false,
+          "chunks": [
+            2
+          ],
+          "assets": [],
+          "issuer": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "profile": {
+            "factory": 6,
+            "building": 4
+          },
+          "failed": false,
+          "errors": 0,
+          "warnings": 0,
+          "reasons": [
+            {
+              "moduleId": 0,
+              "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+              "module": "./app/index.js",
+              "moduleName": "./app/index.js",
+              "type": "cjs require",
+              "userRequest": "./jquery",
+              "loc": "3:11-30"
+            },
+            {
+              "moduleId": 0,
+              "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+              "module": "./app/index1.js",
+              "moduleName": "./app/index1.js",
+              "type": "cjs require",
+              "userRequest": "./jquery",
+              "loc": "3:11-30"
+            }
+          ],
+          "source": "module.exports=function(){\n\tconsole.log('我是jquery');\n};"
+        }
+      ],
+      "filteredModules": 0,
+      "origins": []
+    }
+  ],
+  "modules": [
+    {
+      "id": 0,
+      "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+      "name": "./app/index.js",
+      "index": 0,
+      "index2": 2,
+      "size": 68,
+      "cacheable": true,
+      "built": true,
+      "optional": false,
+      "prefetched": false,
+      "chunks": [
+        0
+      ],
+      "assets": [],
+      "issuer": null,
+      "profile": {
+        "factory": 12,
+        "building": 14
+      },
+      "failed": false,
+      "errors": 0,
+      "warnings": 0,
+      "reasons": [],
+      "source": "var a=require('./a');\na();\nvar jquery=require('./jquery');\njquery();"
+    },
+    {
+      "id": 0,
+      "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+      "name": "./app/index1.js",
+      "index": 3,
+      "index2": 4,
+      "size": 68,
+      "cacheable": true,
+      "built": true,
+      "optional": false,
+      "prefetched": false,
+      "chunks": [
+        1
+      ],
+      "assets": [],
+      "issuer": null,
+      "profile": {
+        "factory": 13,
+        "building": 12,
+        "dependencies": 5
+      },
+      "failed": false,
+      "errors": 0,
+      "warnings": 0,
+      "reasons": [],
+      "source": "var a=require('./b');\nb();\nvar jquery=require('./jquery');\njquery();"
+    },
+    {
+      "id": 1,
+      "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/a.js",
+      "name": "./app/a.js",
+      "index": 1,
+      "index2": 0,
+      "size": 51,
+      "cacheable": true,
+      "built": true,
+      "optional": false,
+      "prefetched": false,
+      "chunks": [
+        0
+      ],
+      "assets": [],
+      "issuer": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+      "profile": {
+        "factory": 5,
+        "building": 5
+      },
+      "failed": false,
+      "errors": 0,
+      "warnings": 0,
+      "reasons": [
+        {
+          "moduleId": 0,
+          "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "module": "./app/index.js",
+          "moduleName": "./app/index.js",
+          "type": "cjs require",
+          "userRequest": "./a",
+          "loc": "1:6-20"
+        }
+      ],
+      "source": "module.exports = function(){\n  console.log('a');\n};"
+    },
+    {
+      "id": 2,
+      "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/jquery.js",
+      "name": "./app/jquery.js",
+      "index": 2,
+      "index2": 1,
+      "size": 55,
+      "cacheable": true,
+      "built": true,
+      "optional": false,
+      "prefetched": false,
+      "chunks": [
+        2
+      ],
+      "assets": [],
+      "issuer": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+      "profile": {
+        "factory": 6,
+        "building": 4
+      },
+      "failed": false,
+      "errors": 0,
+      "warnings": 0,
+      "reasons": [
+        {
+          "moduleId": 0,
+          "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index.js",
+          "module": "./app/index.js",
+          "moduleName": "./app/index.js",
+          "type": "cjs require",
+          "userRequest": "./jquery",
+          "loc": "3:11-30"
+        },
+        {
+          "moduleId": 0,
+          "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+          "module": "./app/index1.js",
+          "moduleName": "./app/index1.js",
+          "type": "cjs require",
+          "userRequest": "./jquery",
+          "loc": "3:11-30"
+        }
+      ],
+      "source": "module.exports=function(){\n\tconsole.log('我是jquery');\n};"
+    },
+    {
+      "id": 3,
+      "identifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/b.js",
+      "name": "./app/b.js",
+      "index": 4,
+      "index2": 3,
+      "size": 51,
+      "cacheable": true,
+      "built": true,
+      "optional": false,
+      "prefetched": false,
+      "chunks": [
+        1
+      ],
+      "assets": [],
+      "issuer": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+      "profile": {
+        "factory": 5,
+        "building": 4
+      },
+      "failed": false,
+      "errors": 0,
+      "warnings": 0,
+      "reasons": [
+        {
+          "moduleId": 0,
+          "moduleIdentifier": "/Users/liqingliu/Study/sourceAnalysis/webpack/study/app/index1.js",
+          "module": "./app/index1.js",
+          "moduleName": "./app/index1.js",
+          "type": "cjs require",
+          "userRequest": "./b",
+          "loc": "1:6-20"
+        }
+      ],
+      "source": "module.exports = function(){\n  console.log('b');\n};"
+    }
+  ],
+  "filteredModules": 0,
+  "children": []
+}

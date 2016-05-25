@@ -90,24 +90,24 @@ myPlugin.prototype.apply = function (compiler) {
 		 * modules are loaded, sealed, optimized, chunked, hashed and restored, etc.
 		 */
 
-		compilation.plugin('build-module', function(module){
+		compilation.plugin('build-module', function (module) {
 			//Before a module build has started.
-			console.log('       compilation-->>' + (i++) + '-->>build-module-->>module.request='+module.request);
+			console.log('       compilation-->>' + (i++) + '-->>build-module-->>module.request=' + module.request);
 		});
 
-		compilation.plugin('succeed-module', function(module){
+		compilation.plugin('succeed-module', function (module) {
 			//A module has been built successfully.
-			console.log('       compilation-->>' + (i++) + '-->>succeed-module-->>module.request='+module.request);
+			console.log('       compilation-->>' + (i++) + '-->>succeed-module-->>module.request=' + module.request);
 		});
 
-		compilation.plugin('failed-module', function(module){
-			console.log('       compilation-->>' + (i++) + '-->>fail-module-->>module.request='+module.request);
+		compilation.plugin('failed-module', function (module) {
+			console.log('       compilation-->>' + (i++) + '-->>fail-module-->>module.request=' + module.request);
 		});
 
 		compilation.plugin('normal-module-loader', function (loaderContext, module) {
 			//this is where all the modules are loaded
 			//one by one, no dependencies are created yet
-			console.log('       compilation-->>' + (i++) + '-->>normal-module-loader-->module.request='+module.request);
+			console.log('       compilation-->>' + (i++) + '-->>normal-module-loader-->module.request=' + module.request);
 		});
 
 		compilation.plugin('seal', function () {
@@ -126,11 +126,7 @@ myPlugin.prototype.apply = function (compiler) {
 		});
 
 
-
-
-
-
-		compilation.plugin('optimize-modules', function(modules) {
+		compilation.plugin('optimize-modules', function (modules) {
 			//handle to the modules array during tree optimization
 			console.log('       compilation-->>' + (i++) + '-->>optimize-modules-->>同步(modules)');
 		});
@@ -141,7 +137,7 @@ myPlugin.prototype.apply = function (compiler) {
 		});
 
 		//optimize chunks may be run several times in a compilation
-		compilation.plugin('optimize-chunks', function(chunks) {
+		compilation.plugin('optimize-chunks', function (chunks) {
 			//unless you specified multiple entries in your config
 			//there's only one chunk at this point
 			//这句非常有用，如果在配置文件中，entry只有一个的话，chunk 就只有一个
@@ -149,7 +145,7 @@ myPlugin.prototype.apply = function (compiler) {
 
 			chunks.forEach(function (chunk) {
 				//chunks have circular references to their modules
-				chunk.modules.forEach(function (module){
+				chunk.modules.forEach(function (module) {
 					//module.loaders, module.rawRequest, module.dependencies, etc.
 				});
 			});
@@ -191,14 +187,13 @@ myPlugin.prototype.apply = function (compiler) {
 			console.log('       compilation-->>' + (i++) + '-->>after-optimize-module-ids-->>同步(modules)');
 		});
 
-		compilation.plugin('record-modules', function (modules,records) {
+		compilation.plugin('record-modules', function (modules, records) {
 			//Store module info to the records.
 			console.log('       compilation-->>' + (i++) + '-->>record-modules-->>同步(modules,records)');
 		});
 
 
-
-		compilation.plugin('revive-chunks', function (chunks,records) {
+		compilation.plugin('revive-chunks', function (chunks, records) {
 			//Restore chunk info from records.
 			console.log('       compilation-->>' + (i++) + '-->>revive-chunks-->>同步(chunks,records)');
 		});
@@ -219,7 +214,7 @@ myPlugin.prototype.apply = function (compiler) {
 			//Optimizing the chunk ids has finished.
 			console.log('       compilation-->>' + (i++) + '-->>after-optimize-chunk-ids-->>同步(chunks)');
 		});
-		compilation.plugin('record-chunks', function (chunks,records) {
+		compilation.plugin('record-chunks', function (chunks, records) {
 			//Store chunk info to the records.
 			console.log('       compilation-->>' + (i++) + '-->>record-chunks-->>同步(chunks,records)');
 		});
@@ -252,7 +247,7 @@ myPlugin.prototype.apply = function (compiler) {
 			//Store info about the compilation to the record
 			console.log('       compilation-->>' + (i++) + '-->>record');
 		});
-		compilation.plugin('optimize-chunk-assets', function (chunks,callback) {
+		compilation.plugin('optimize-chunk-assets', function (chunks, callback) {
 			//Optimize the assets for the chunks.
 			console.log('       compilation-->>' + (i++) + '-->>optimize-chunk-assets');
 			callback();
@@ -263,7 +258,7 @@ myPlugin.prototype.apply = function (compiler) {
 			console.log('       compilation-->>' + (i++) + '-->>after-optimize-chunk-assets');
 		});
 
-		compilation.plugin('optimize-assets', function (assets,callback) {
+		compilation.plugin('optimize-assets', function (assets, callback) {
 			//The assets are stored in this.assets.
 			console.log('       compilation-->>' + (i++) + '-->>optimize-assets');
 			callback();
@@ -392,7 +387,7 @@ FileListPlugin.prototype.apply = function (compiler) {
 
 function MyPlugin() {
 }
-var ConcatSource=require('../node_modules/webpack-sources/lib/ConcatSource.js')
+var ConcatSource = require('../node_modules/webpack-sources/lib/ConcatSource.js')
 MyPlugin.prototype.apply = function (compiler) {
 	compiler.plugin('emit', function (compilation, callback) {
 
@@ -414,14 +409,13 @@ MyPlugin.prototype.apply = function (compiler) {
 		});
 
 
-
 		callback();
 	});
 
-	compiler.plugin('compilation',function(compilation){
-		compilation.plugin("optimize-chunk-assets", function(chunks, callback) {
-			chunks.forEach(function(chunk) {
-				chunk.files.forEach(function(file) {
+	compiler.plugin('compilation', function (compilation) {
+		compilation.plugin("optimize-chunk-assets", function (chunks, callback) {
+			chunks.forEach(function (chunk) {
+				chunk.files.forEach(function (file) {
 					compilation.assets[file] = new ConcatSource("\/**Sweet Banner**\/", "\n", compilation.assets[file]);
 				});
 			});
@@ -431,16 +425,16 @@ MyPlugin.prototype.apply = function (compiler) {
 };
 
 
-
-var PrintChunksPlugin = function() {};
-PrintChunksPlugin.prototype.apply = function(compiler) {
-	compiler.plugin('compilation', function(compilation, params) {
-		compilation.plugin('after-optimize-chunk-assets', function(chunks) {
-			console.log(chunks.map(function(c) {
+var PrintChunksPlugin = function () {
+};
+PrintChunksPlugin.prototype.apply = function (compiler) {
+	compiler.plugin('compilation', function (compilation, params) {
+		compilation.plugin('after-optimize-chunk-assets', function (chunks) {
+			console.log(chunks.map(function (c) {
 				return {
 					id: c.id,
 					name: c.name,
-					includes: c.modules.map(function(m) {
+					includes: c.modules.map(function (m) {
 						//module.request 代表什么含义，从输出上看
 						//按照node哪种写法，一个文件就是一个module。
 						//猜想request是 module 对应的文件的绝对路径
@@ -454,14 +448,19 @@ PrintChunksPlugin.prototype.apply = function(compiler) {
 
 var webpack = require('../lib/webpack');
 var compile = webpack({
-	entry: './app/index.js', /*当初，这里直接以app开头，不行啊。必须用.表示从当前目录开始啊*/
+	entry: {
+		a: './app/index.js',
+		b: './app/index1.js'
+	}, /*当初，这里直接以app开头，不行啊。必须用.表示从当前目录开始啊*/
 	output: {
 		path: __dirname + "/public",
-		filename: "bundle.js"
+		filename: "[name].bundle.js"
 	},
 	plugins: [
 		new myPlugin(),
+		//new MyPlugin(),
 		//new PrintChunksPlugin()
+		new webpack.optimize.CommonsChunkPlugin('init')
 	]
 });
 /*
