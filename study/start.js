@@ -461,7 +461,7 @@ var compile = webpack({
 		//new MyPlugin(),
 		//new PrintChunksPlugin()
 		//new webpack.optimize.CommonsChunkPlugin('init')
-		new webpack.optimize.OccurrenceOrderPlugin()
+		//new webpack.optimize.OccurrenceOrderPlugin(true)
 	]
 });
 /*
