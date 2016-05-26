@@ -457,7 +457,7 @@ var compile = webpack({
 		filename: "[name].bundle.js"
 	},
 	plugins: [
-		new myPlugin(),
+		//new myPlugin(),
 		//new MyPlugin(),
 		//new PrintChunksPlugin()
 		new webpack.optimize.CommonsChunkPlugin('init')
