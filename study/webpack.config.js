@@ -13,5 +13,8 @@ module.exports={
 		//new PrintChunksPlugin()
 		//new webpack.optimize.CommonsChunkPlugin('init')
 		//new webpack.NoErrorsPlugin()
+		//new webpack.ProgressPlugin(function handler(percentage, msg) {
+		//	console.log("percentage",percentage);
+		//})
 	]
 };
