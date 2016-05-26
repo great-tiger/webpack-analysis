@@ -33,11 +33,11 @@ compilation.addEntry(this.context, dep, this.name, callback);
 3.具体排序规则，待具体研究  
 
 # NoErrorsPlugin
-1.注册 should-emit should-record 回调，如果存在错误，则跳过emitting阶段和recording阶段
-2.如果有错误的话，将不会有assets被emitted. 我测试的结果是，没有assets文件被生成
-3.If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin    
-通过使用这个插件，webpack进程就不会因为一个错误退出了;
-关于这种说法，没有能够证实。我用webpack --watch.无论是不是使用这个插件，遇到错误，都不会退出啊。
+1.注册 should-emit should-record 回调，如果存在错误，则跳过emitting阶段和recording阶段       
+2.如果有错误的话，将不会有assets被emitted. 我测试的结果是，没有assets文件被生成       
+3.If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin            
+通过使用这个插件，webpack进程就不会因为一个错误退出了;       
+关于这种说法，没有能够证实。我用webpack --watch.无论是不是使用这个插件，遇到错误，都不会退出啊。      
 
 
 
