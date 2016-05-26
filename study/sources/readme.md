@@ -25,7 +25,12 @@ compilation.addEntry(this.context, dep, this.name, callback);
    parents = []; 所属chunk，说明一个chunk，可以有多个父亲   
    files = [];chunk要生成的文件？   
    entry = false; 是否是entry chunk   
-   initial = false; 是不是initial chunk    
+   initial = false; 是不是initial chunk  
+
+# OccurrenceOrderPlugin
+1、注册 optimize-module-order 插件 ，对modules进行排序
+2、注册 optimize-chunk-order  插件 ，对chunks进行排序
+3、具体排序规则，待具体研究  
 
 
 

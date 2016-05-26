@@ -162,7 +162,7 @@ myPlugin.prototype.apply = function (compiler) {
 		});
 
 		compilation.plugin('after-optimize-tree', function () {
-			console.log('       compilation-->>' + (i++) + '-->>after-optimize-tree');
+			console.log('       compilation-->>' + (i++) + '-->>after-optimize-tree \n');
 		});
 
 		compilation.plugin('revive-modules', function (modules, records) {
@@ -189,7 +189,7 @@ myPlugin.prototype.apply = function (compiler) {
 
 		compilation.plugin('record-modules', function (modules, records) {
 			//Store module info to the records.
-			console.log('       compilation-->>' + (i++) + '-->>record-modules-->>同步(modules,records)');
+			console.log('       compilation-->>' + (i++) + '-->>record-modules-->>同步(modules,records) \n');
 		});
 
 
@@ -216,7 +216,7 @@ myPlugin.prototype.apply = function (compiler) {
 		});
 		compilation.plugin('record-chunks', function (chunks, records) {
 			//Store chunk info to the records.
-			console.log('       compilation-->>' + (i++) + '-->>record-chunks-->>同步(chunks,records)');
+			console.log('       compilation-->>' + (i++) + '-->>record-chunks-->>同步(chunks,records)\n');
 		});
 
 		compilation.plugin('before-hash', function () {
@@ -457,10 +457,11 @@ var compile = webpack({
 		filename: "[name].bundle.js"
 	},
 	plugins: [
-		//new myPlugin(),
+		new myPlugin(),
 		//new MyPlugin(),
 		//new PrintChunksPlugin()
-		new webpack.optimize.CommonsChunkPlugin('init')
+		//new webpack.optimize.CommonsChunkPlugin('init')
+		new webpack.optimize.OccurrenceOrderPlugin()
 	]
 });
 /*
