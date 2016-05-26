@@ -463,6 +463,7 @@ var compile = webpack({
 		new webpack.optimize.CommonsChunkPlugin('init')
 	]
 });
+
 /*
  var showHash = d(options.hash, true);
  var showVersion = d(options.version, true);
