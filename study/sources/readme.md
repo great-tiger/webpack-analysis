@@ -1,8 +1,12 @@
 # Tapable  这个是一个很有用的类
-1.applyPluginsAsyncWaterfall(name, init, callback)     
+1、applyPluginsAsyncWaterfall(name, init, callback) 
+
 找到名称为name的插件，分别对init进行处理（下一个处理函数可以获得上一个处理函数的结果）     
+
 最终处理后的结果传给callback     
+
 插件签名:
+
 ```javascript
 function(value,next){
 	//......     
@@ -10,9 +14,12 @@ function(value,next){
 	next(err,result)	
 }
 ```
-2.applyPluginsWaterfall0(name,init)    
+2、applyPluginsWaterfall0(name,init)     
+
 实现的功能和applyPluginsAsyncWaterfall完全一样，只不过这个是同步版本    
+
 插件签名:
+
 ```javascript
 function(init){
 	//......
@@ -21,7 +28,14 @@ function(init){
 }
 ```
 
+3、applyPluginsBailResult(name)
+
+找出名称为name的插件执行，返回第一个不是undefined的结果，并结束
+
+
+
 # ArrayMap
+
 1.模拟字典 key,value 都可以为object     
 2.接口：get(key),set(key,value),remove(key),clone()     
 
@@ -43,7 +57,7 @@ compilation.addEntry(this.context, dep, this.name, callback);
 
 # Chunk
 1.这个类不继承其它任何类
-2. 重要属性说明
+1. 重要属性说明
    name = name; chunk 名字   
    modules = []; chunks 包含的modules   
    parents = []; 所属chunk，说明一个chunk，可以有多个父亲   
@@ -76,7 +90,7 @@ if(typeof loaders === "string") {
 	throw new TypeError("Element from loaders list should have one of the fields 'loader' or  'loaders'");
 } 
 ```
-loader是什么时候，怎么掉用的呢？  
+loader是怎么掉用的呢？  
 ```javascript   
 function NormalModuleFactory(context, resolvers, parser, options) {
 	Tapable.call(this);
@@ -85,17 +99,25 @@ function NormalModuleFactory(context, resolvers, parser, options) {
 	this.loaders = new LoadersList(options.loaders);
 	this.preLoaders = new LoadersList(options.preLoaders);
 	this.postLoaders = new LoadersList(options.postLoaders);
-	this.plugin("factory", function() {});
-	this.plugin("resolver", function() {});
+	this.plugin("factory", function() {
+  
+	});
+	this.plugin("resolver", function() {
+  
+	});
 }
 NormalModuleFactory.prototype.create = function(context, dependency, callback) {
 	//创建module
 	//从这里开始他的生命周期
-	//before-resolve         
-
+	//before-resolve 对初始素材做进一步的处理        
+    //factory 该阶段的结果是一个函数，这个函数会对上一步的结果处理
+    //resolver 该阶段的结果是一个函数，这个函数会对上一步的结果处理，处理后的值，很重要。它是创建module的素材
+    //after-resolve applyPluginsAsyncWaterfall("after-resolve", data, function(err, result)  data为resolver的结果  该阶段的任务是对data进行进一步的处理
+    //create-module applyPluginsBailResult("create-module", result) result为after-resolve阶段处理的值，该阶段的任务是创建module。
+    //module   对module做进一步的处理
 }
 ```
 
+来张图，更清晰
 
-
-
+![NormalModuleFactory解析](assets/NormalModuleFactory.jpg)

@@ -23,7 +23,7 @@ Tapable.prototype.apply = function apply() {
 	}
 };
 
-/*找出key为name的插件执行插件的apply方法*/
+/*找出key为name的插件执行*/
 Tapable.prototype.applyPluginsBailResult = function applyPluginsBailResult(name) {
 	if(!this._plugins[name]) return;
 	var args = Array.prototype.slice.call(arguments, 1);
