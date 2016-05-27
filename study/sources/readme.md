@@ -37,7 +37,20 @@ compilation.addEntry(this.context, dep, this.name, callback);
 2.如果有错误的话，将不会有assets被emitted. 我测试的结果是，没有assets文件被生成       
 3.If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin            
 通过使用这个插件，webpack进程就不会因为一个错误退出了;       
-关于这种说法，没有能够证实。我用webpack --watch.无论是不是使用这个插件，遇到错误，都不会退出啊。      
+关于这种说法，没有能够证实。我用webpack --watch.无论是不是使用这个插件，遇到错误，都不会退出啊。     
+
+＃ 有关loader
+1.看到这块代码就可以知道loader中的！是干嘛用的了。它就是一个分割符。       
+你不想用这个，就直接用数组吧。      
+如果不是数组，就报错了。      
+```javascript
+var loaders = element.loaders || element.loader;
+if(typeof loaders === "string") {
+	loaders = loaders.split("!");
+}else if(!Array.isArray(loaders)) {
+	throw new TypeError("Element from loaders list should have one of the fields 'loader' or  'loaders'");
+} 
+```
 
 
 

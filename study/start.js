@@ -456,6 +456,14 @@ var compile = webpack({
 		path: __dirname + "/public",
 		filename: "[name].bundle.js"
 	},
+	module: {
+		loaders: [{
+			test: /\.js$/,
+			loader: function () {
+				return 'abc';
+			}
+		}]
+	},
 	plugins: [
 		new myPlugin(),
 		//new MyPlugin(),
