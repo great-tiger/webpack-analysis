@@ -458,9 +458,7 @@ var compile = webpack({
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			loader: function () {
-				return 'abc';
-			}
+			loader:"my-loader"
 		}]
 	},
 	plugins: [

@@ -90,7 +90,22 @@ if(typeof loaders === "string") {
 	throw new TypeError("Element from loaders list should have one of the fields 'loader' or  'loaders'");
 } 
 ```
-loader是怎么掉用的呢？  
+#### loader是怎么调用的呢？ 
+
+先从Compile的make阶段开始吧，如果entry为一个的话。
+
+会触发SingleEntryPlugin中注册的make插件
+
+```
+compiler.plugin("make", function(compilation, callback) {
+   var dep = new SingleEntryDependency(this.entry);
+   dep.loc = this.name;
+   compilation.addEntry(this.context, dep, this.name, callback);
+}.bind(this));
+```
+
+ 追踪一下compilation.addEntry发现会调用NormalModuleFactory的create方法创建module
+
 ```javascript   
 function NormalModuleFactory(context, resolvers, parser, options) {
 	Tapable.call(this);
@@ -121,3 +136,94 @@ NormalModuleFactory.prototype.create = function(context, dependency, callback) {
 来张图，更清晰
 
 ![NormalModuleFactory解析](assets/NormalModuleFactory.jpg)
+
+接着分析，我想知道loader是如何调用的。
+
+在resolver阶段，追踪到下面一样代码
+
+```
+_this.resolveRequestArray.bind(_this, contextInfo, _this.context, _this.loaders.match(resourcePath), _this.resolvers.loader),
+```
+
+先不管它是干什么的，我们主要关注一下_this.loaders.match(resourcePath)似乎与loader有关系啦
+
+这个match方法的作用就是返回一个数组，数组中是匹配到loaders，举个例子：
+
+```
+var loader = new LoadersList([{
+   test: /\.css$/,
+   loader: 'css'
+}]);
+(loader.match('style.css')).should.eql(['css']);
+```
+
+具体LoadersList类的用法，可以查看它的测试文档，那里是查看api最好的地方。
+
+我们把注意力，再次回到resolveRequestArray
+
+```
+NormalModuleFactory.prototype.resolveRequestArray = function resolveRequestArray(contextInfo, context, array, resolver, callback) {
+   if(array.length === 0) return callback(null, []);
+   async.map(array, function(item, callback) {
+      if(item === "" || item[0] === "?")
+         return callback(null, item);
+      resolver.resolve(contextInfo, context, item, callback);
+   }, callback);
+};
+```
+
+接着分析 resolver.resolve(contextInfo, context, item, callback);  
+
+需要注意一下，这里的item就是loader的字符串表示。
+
+resolver 就是 _this.resolvers.loader 即，loader的解析器。
+
+> loader的解析器，能找到loader对应的js文件所在的位置，目前还是猜测
+
+我们接着找找，loader的解析器是什么?
+
+先略过解析器吧，从这里往上回溯吧。
+
+NormalModuleFactory的create方法，会创建一个module
+
+> module.loaders就是这个module，应该使用的loader
+
+module.loaders 什么时候调用的呢？
+
+通过上面的分析，我们知道调用compilation.addEntry方法，会通过NormalModuleFactory.create方法创建module。接着会执行buildModule，在后来执行module.build方法。
+
+NormalModule.build进而调用NormalModule.dobuild
+
+```
+NormalModule.prototype.doBuild = function doBuild(options, compilation, resolver, fs, callback) {
+   var loaderContext = {
+   };
+   loaderContext._module = this;
+   loaderContext._compilation = compilation;
+   loaderContext._compiler = compilation.compiler;
+   loaderContext.fs = fs;
+   compilation.applyPlugins("normal-module-loader", loaderContext, this);
+   /*运行该模块对应的loaders*/
+   runLoaders({
+      resource: this.resource,
+      loaders: this.loaders,
+      context: loaderContext,
+      readResource: fs.readFile.bind(fs)
+   }, function(err, result) {
+   });
+```
+
+其中 this.loaders=['loader对应的js文件所在的位置'，'loader对应的js文件所在的位置']
+
+经验证 runLoaders 负责执行loader
+
+runLoaders 到底是什么？
+
+https://github.com/webpack/loader-runner
+
+loader 是如何执行的，分析到此结束吧。具体loader执行的细节，写一个主题接着分析。就要深入loader-runner源码了
+
+#### loader具体执行细节
+
+待续。。。。。。
+
