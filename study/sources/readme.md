@@ -42,7 +42,8 @@ compilation.addEntry(this.context, dep, this.name, callback);
 ＃ 有关loader
 1.看到这块代码就可以知道loader中的！是干嘛用的了。它就是一个分割符。       
 你不想用这个，就直接用数组吧。      
-如果不是数组，就报错了。      
+如果不是数组，就报错了。         
+代码来自于LoadersList      
 ```javascript
 var loaders = element.loaders || element.loader;
 if(typeof loaders === "string") {
