@@ -449,8 +449,7 @@ PrintChunksPlugin.prototype.apply = function (compiler) {
 var webpack = require('../lib/webpack');
 var compile = webpack({
 	entry: {
-		a: './app/index.js',
-		b: './app/index1.js'
+		a: './app/index.js'
 	}, /*当初，这里直接以app开头，不行啊。必须用.表示从当前目录开始啊*/
 	output: {
 		path: __dirname + "/public",

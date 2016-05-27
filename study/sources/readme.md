@@ -1,3 +1,26 @@
+# Tapable  这个是一个很有用的类
+1.applyPluginsAsyncWaterfall(name, init, callback)     
+找到名称为name的插件，分别对init进行处理（下一个处理函数可以获得上一个处理函数的结果）     
+最终处理后的结果传给callback     
+插件签名:
+```javascript
+function(value,next){
+	//......     
+	//对value做进一步的处理      
+	next(err,result)	
+}
+```
+2.applyPluginsWaterfall0(name,init)    
+实现的功能和applyPluginsAsyncWaterfall完全一样，只不过这个是同步版本    
+插件签名:
+```javascript
+function(init){
+	//......
+	//对init做进一步的处理
+	return init;
+}
+```
+
 # ArrayMap
 1.模拟字典 key,value 都可以为object     
 2.接口：get(key),set(key,value),remove(key),clone()     
@@ -9,7 +32,8 @@
 1.compilation 回调    
 设置compilation.dependencyFactories.set(SingleEntryDependency, normalModuleFactory);   
 2.make 回调    
-compilation.addEntry(this.context, dep, this.name, callback);    
+compilation.addEntry(this.context, dep, this.name, callback);      
+为compilation增加entry 
 
 # Compilation
 1.这个类继承自Tapable
@@ -52,7 +76,25 @@ if(typeof loaders === "string") {
 	throw new TypeError("Element from loaders list should have one of the fields 'loader' or  'loaders'");
 } 
 ```
+loader是什么时候，怎么掉用的呢？  
+```javascript   
+function NormalModuleFactory(context, resolvers, parser, options) {
+	Tapable.call(this);
+	this.resolvers = resolvers;
+	this.parser = parser;
+	this.loaders = new LoadersList(options.loaders);
+	this.preLoaders = new LoadersList(options.preLoaders);
+	this.postLoaders = new LoadersList(options.postLoaders);
+	this.plugin("factory", function() {});
+	this.plugin("resolver", function() {});
+}
+NormalModuleFactory.prototype.create = function(context, dependency, callback) {
+	//创建module
+	//从这里开始他的生命周期
+	//before-resolve         
 
+}
+```
 
 
 
